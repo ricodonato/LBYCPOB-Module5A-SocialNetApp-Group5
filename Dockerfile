@@ -4,6 +4,13 @@
 FROM maven:3.9-eclipse-temurin-25 AS build
 
 WORKDIR /app
+
+# The base Maven image sets MAVEN_CONFIG=/root/.m2, which the Maven
+# wrapper script (mvnw) mistakenly passes along as a CLI argument,
+# causing "Unknown lifecycle phase '/root/.m2'". Clear it so mvnw
+# behaves normally.
+ENV MAVEN_CONFIG=""
+
 # Copy the Maven wrapper and pom first so dependency resolution is
 # cached in its own Docker layer -- it only re-runs when pom.xml
 # actually changes, not on every source edit.
